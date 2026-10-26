@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}UNDERGRAWN | JOSE_DM{% endblock %}</title>
+  <style>
+    :root{font-family:Arial,Helvetica,sans-serif;color:#171717;background:#faf9f6;font-synthesis:none}
+    *{box-sizing:border-box}body{max-width:1240px;margin:0 auto;padding:0 2rem}
+    a{color:inherit;text-decoration:none}a:hover{opacity:.65}
+    nav{min-height:82px;display:flex;gap:1.5rem;align-items:center;border-bottom:1px solid #dedbd5}
+    nav form{display:inline;margin:0}.brand{font-size:1.1rem;font-weight:700;letter-spacing:.12em;margin-right:auto}
+    nav a:not(.brand),nav span{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em}
+    button{cursor:pointer;padding:.85rem 1.2rem;border:0;background:#171717;color:white;text-transform:uppercase;letter-spacing:.08em}
+    button:hover{background:#48443f}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.2rem}
+    .card,section{margin:0 0 2rem}.product-image{width:100%;aspect-ratio:4/5;object-fit:cover;background:#eeece7}
+    .product-info{padding:.7rem 0}.product-info h2{font-size:.96rem;font-weight:500;margin:.3rem 0}
+    .muted,.product-meta{font-size:.8rem;color:#77736d}.price{font-size:.9rem}
+    .page-heading{padding:3.5rem 0 2rem}.page-heading h1{font-size:clamp(2.2rem,6vw,4.5rem);font-weight:400;letter-spacing:-.06em;margin:0}
+    .messages{padding:0;list-style:none}.messages li{padding:.8rem 0;border-bottom:1px solid #dedbd5;font-size:.9rem}
+    label{display:block;margin:1rem 0;font-size:.84rem}input,textarea,select{display:block;width:100%;max-width:560px;padding:.75rem;border:1px solid #d5d1cb;background:#fff;color:#171717}
+    input[type=checkbox]{width:auto;display:inline}form p{max-width:560px}
+    .detail{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.8fr);gap:5vw;padding:3rem 0}
+    .detail img{width:100%;max-height:760px;object-fit:cover;background:#eeece7}.detail-copy{padding-top:1rem}
+    .detail-copy h1{font-size:clamp(2rem,4vw,3.5rem);font-weight:400;letter-spacing:-.05em}
+    .admin-row{padding:1rem 0;border-top:1px solid #dedbd5;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+    footer{padding:2rem 0;margin-top:3rem;border-top:1px solid #dedbd5;font-size:.72rem;letter-spacing:.1em}
+    @media(max-width:650px){body{padding:0 1rem}nav{gap:.7rem;flex-wrap:wrap;padding:1rem 0}.brand{width:100%}.detail{grid-template-columns:1fr;gap:1rem}}
+  </style>
+</head>
+<body>
+  <nav>
+    <a class="brand" href="{% url 'catalog' %}">UNDERGRAWN <span>| JOSE_DM</span></a>
+    {% if user.is_authenticated %}
+      <a href="{% url 'orders' %}">Mis pedidos</a>
+      {% if user.is_staff %}<a href="{% url 'admin-products' %}">Gestionar productos</a>{% endif %}
+      <span>{{ user.username }}</span>
+      <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit">Salir</button></form>
+    {% else %}
+      <a href="{% url 'login' %}">Ingresar</a>
+      <a href="{% url 'register' %}">Crear cuenta</a>
+    {% endif %}
+  </nav>
+  {% if messages %}<ul class="messages">{% for message in messages %}<li>{{ message }}</li>{% endfor %}</ul>{% endif %}
+  <main>{% block content %}{% endblock %}</main>
+  <footer>UNDERGRAWN | JOSE_DM · VESTIR LO ESENCIAL</footer>
+</body>
+</html>

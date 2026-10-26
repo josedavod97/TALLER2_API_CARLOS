@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from typing import Annotated
+from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, HttpUrl, StringConstraints
 from pydantic import computed_field, model_validator
@@ -9,6 +9,23 @@ NonEmptyString = Annotated[str, StringConstraints(strip_whitespace=True, min_len
 
 class Schema(BaseModel):
     model_config = ConfigDict(extra="forbid")
+
+
+class UserCreate(Schema):
+    username: Annotated[
+        str, StringConstraints(strip_whitespace=True, min_length=3, max_length=150)
+    ]
+    email: Annotated[
+        str, StringConstraints(strip_whitespace=True, min_length=3, max_length=254)
+    ]
+    role: Literal["customer", "admin"] = "customer"
+
+
+class UserOut(Schema):
+    id: str
+    username: str
+    email: str
+    role: Literal["customer", "admin"]
 
 
 class Variant(Schema):

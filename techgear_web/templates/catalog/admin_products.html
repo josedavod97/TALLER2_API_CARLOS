@@ -1,0 +1,17 @@
+{% extends "catalog/base.html" %}
+{% block title %}Gestión de prendas | UNDERGRAWN{% endblock %}
+{% block content %}
+<header class="page-heading"><h1>Prendas</h1></header>
+<p><a href="{% url 'product-create' %}">+ Agregar prenda</a></p>
+{% for product in products %}
+  <div class="admin-row">
+    <div><strong>{{ product.name }}</strong><p class="muted">{{ product.category }} · ${{ product.price }} · Stock total: {{ product.stock }}</p></div>
+    <a href="{% url 'product-edit' product.id %}">Editar</a>
+    <form method="post" action="{% url 'product-delete' product.id %}">
+      {% csrf_token %}<button type="submit">Desactivar</button>
+    </form>
+  </div>
+{% empty %}
+  <p>No hay productos activos.</p>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,6 @@
+{% extends "catalog/base.html" %}
+{% block title %}Crear cuenta | UNDERGRAWN{% endblock %}
+{% block content %}
+<h1>Crear cuenta de cliente</h1>
+<form method="post">{% csrf_token %}{{ form.as_p }}<button type="submit">Registrarme</button></form>
+{% endblock %}

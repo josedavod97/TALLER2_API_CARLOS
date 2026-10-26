@@ -1,0 +1,26 @@
+{% extends "catalog/base.html" %}
+{% block title %}Colección | UNDERGRAWN{% endblock %}
+{% block content %}
+<header class="page-heading">
+  <p class="muted">ROPA PARA TODOS LOS DÍAS</p>
+  <h1>La colección</h1>
+</header>
+{% if products %}
+  <div class="grid">
+    {% for product in products %}
+      <article class="card">
+        <a href="{% url 'product-detail' product.id %}">
+          {% if product.image_url %}<img class="product-image" src="{{ product.image_url }}" alt="{{ product.name }}">{% else %}<div class="product-image"></div>{% endif %}
+          <div class="product-info">
+            <p class="product-meta">{{ product.category }}</p>
+            <h2>{{ product.name }}</h2>
+            <p class="price">${{ product.price }}</p>
+          </div>
+        </a>
+      </article>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>No hay productos disponibles en este momento.</p>
+{% endif %}
+{% endblock %}

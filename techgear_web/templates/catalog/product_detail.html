@@ -1,0 +1,24 @@
+{% extends "catalog/base.html" %}
+{% block title %}{{ product.name }} | UNDERGRAWN{% endblock %}
+{% block content %}
+<article class="detail">
+  {% if product.image_url %}<img src="{{ product.image_url }}" alt="{{ product.name }}">{% else %}<div class="product-image"></div>{% endif %}
+  <div class="detail-copy">
+    <p class="product-meta">{{ product.category }}</p>
+    <h1>{{ product.name }}</h1>
+    <p>{{ product.description }}</p>
+    <p class="price">${{ product.price }}</p>
+    <p class="muted">Tallas y colores disponibles</p>
+    {% if user.is_authenticated and not user.is_staff and product.stock > 0 and form.variant.choices %}
+      <form method="post">{% csrf_token %}{{ form.as_p }}<button type="submit">Añadir al pedido</button></form>
+    {% elif product.stock == 0 %}
+      <p class="muted">Producto agotado.</p>
+    {% elif user.is_authenticated and not user.is_staff %}
+      <p class="muted">No hay variantes disponibles.</p>
+    {% endif %}
+  </div>
+  {% if not user.is_authenticated %}
+    <p><a href="{% url 'login' %}">Ingresa</a> para realizar un pedido.</p>
+  {% endif %}
+</article>
+{% endblock %}

@@ -1,0 +1,43 @@
+databases:
+  - name: techgear-users
+    plan: basic-256mb
+    databaseName: techgear_users
+    user: techgear
+
+services:
+  - type: web
+    name: techgear-api
+    runtime: python
+    plan: starter
+    buildCommand: pip install -r techgear_api/requirements.txt
+    startCommand: cd techgear_api && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: MONGODB_URL
+        sync: false
+      - key: MONGODB_DATABASE
+        value: techgear
+      - key: ADMIN_API_TOKEN
+        sync: false
+
+  - type: web
+    name: techgear-web
+    runtime: python
+    plan: starter
+    buildCommand: pip install -r techgear_web/requirements.txt && python techgear_web/manage.py collectstatic --noinput
+    startCommand: cd techgear_web && python manage.py migrate && gunicorn techgear.wsgi:application --bind 0.0.0.0:$PORT
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_ALLOWED_HOSTS
+        value: techgear-web.onrender.com
+      - key: FASTAPI_BASE_URL
+        value: https://techgear-api.onrender.com
+      - key: CORE_API_TOKEN
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: techgear-users
+          property: connectionString
